@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from os import error, path
+from uhubctl import Hub, Port
 import sys
 import time
 import yaml
@@ -43,7 +44,6 @@ class Job(threading.Thread):
     def run(self):
         while not self.stopped.wait(self.interval.total_seconds()):
             self.execute(*self.args, **self.kwargs)
-
 
 
 def update_sensors():
@@ -195,7 +195,7 @@ def get_host_model():
         model = f'{deviceManufacturer} {deviceNameDisplay}'
     return model
 
-def on_connect(client, userdata, flags, reason_code, properties):
+def on_connect(client, userdata, flags, reason_code='', properties=''):
     if reason_code == 0:
         write_message_to_console('Connected to broker')
         print("subscribing : " + f"{ha_status}/status")
@@ -216,9 +216,15 @@ def on_message(client, userdata, message):
     if message.payload.decode() == 'online':
         send_config_message(client)
     elif message.payload.decode() == "display_on":
+        write_message_to_console("Switch port 1-1.2 on")
+        port.status = True
+        write_message_to_console("Screen is turned on.")
         reading = subprocess.check_output([vcgencmd, "display_power", "1"]).decode("UTF-8")
         update_sensors()
     elif message.payload.decode() == "display_off":
+        write_message_to_console("Switch port 1-1.2 off")
+        port.status = False
+        write_message_to_console("Screen is turned off.")
         reading = subprocess.check_output([vcgencmd, "display_power", "0"]).decode("UTF-8")
         update_sensors()
 

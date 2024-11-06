@@ -161,6 +161,9 @@ def get_display_status():
         display_state = "Unknown"
     return display_state
 
+def get_slideshow_status():
+    return False
+
 # Replaced with psutil method - does this not work fine?
 def get_clock_speed():
     clock_speed = int(psutil.cpu_freq().current)
@@ -350,156 +353,168 @@ def zpool_base(pool) -> dict:
         }
 
 sensors = {
-          'temperature':
-                {'name':'Temperature',
-                 'class': 'temperature',
-                 'state_class':'measurement',
-                 'unit': '°C',
-                 'icon': 'thermometer',
-                 'sensor_type': 'sensor',
-                 'function': get_temp},
-            'fan_speed':
-                {'name': 'Fan Speed',
-                 'state_class': 'measurement',
-                 'unit': 'rpm',
-                 'icon': 'fan',
-                 'sensor_type': 'sensor',
-                 'function': get_fan_speed},
-          'display':
-                {'name':'Display Switch',
-                 'icon': 'monitor',
-                 'sensor_type': 'switch',
-                 'function': get_display_status,
-                 'prop': PropertyBag({
-                     'command_topic'      : 'system-sensors/sensor/{device_name}/command',
-                     'state_off'          : '0',
-                     'state_on'           : '1',
-                     'payload_off'        : 'display_off',
-                     'payload_on'         : 'display_on',
-                 })},
-          'clock_speed':
-                {'name':'Clock Speed',
-                 'state_class':'measurement',
-                 'unit': 'MHz',
-                 'sensor_type': 'sensor',
-                 'function': get_clock_speed},
-          'disk_use':
-                {'name':'Disk Use',
-                 'state_class':'measurement',
-                 'unit': '%',
-                 'icon': 'micro-sd',
-                 'sensor_type': 'sensor',
-                 'function': lambda: get_disk_usage('/')},
-          'memory_use':
-                {'name':'Memory Use',
-                 'state_class':'measurement',
-                 'unit': '%',
-                 'icon': 'memory',
-                 'sensor_type': 'sensor',
-                 'function': get_memory_usage},
-          'cpu_usage':
-                {'name':'CPU Usage',
-                 'state_class':'measurement',
-                 'unit': '%',
-                 'icon': 'chip',
-                 'sensor_type': 'sensor',
-                 'function': get_cpu_usage},
-          'load_1m':
-                {'name': 'Load 1m',
-                 'unit': '%',
-                 'state_class':'measurement',
-                 'icon': 'cpu-64-bit',
-                 'sensor_type': 'sensor',
-                 'function': lambda: get_load(0)},
-          'load_5m':
-                {'name': 'Load 5m',
-                 'unit': '%',
-                 'state_class':'measurement',
-                 'icon': 'cpu-64-bit',
-                 'sensor_type': 'sensor',
-                 'function': lambda: get_load(1)},
-          'load_15m':
-                {'name': 'Load 15m',
-                 'unit': '%',
-                 'state_class':'measurement',
-                 'icon': 'cpu-64-bit',
-                 'sensor_type': 'sensor',
-                 'function': lambda: get_load(2)},
-          'net_tx':
-                {'name': 'Network Upload',
-                 'state_class':'measurement',
-                 'unit': 'Kbps',
-                 'icon': 'server-network',
-                 'sensor_type': 'sensor',
-                 'function': get_net_data_tx},
-          'net_rx':
-                {'name': 'Network Download',
-                 'state_class':'measurement',
-                 'unit': 'Kbps',
-                 'icon': 'server-network',
-                 'sensor_type': 'sensor',
-                 'function': get_net_data_rx},
-          'swap_usage':
-                {'name':'Swap Usage',
-                 'state_class':'measurement',
-                 'unit': '%',
-                 'icon': 'harddisk',
-                 'sensor_type': 'sensor',
-                 'function': get_swap_usage},
-          'power_status':
-                {'name': 'Under Voltage',
-                 'class': 'problem',
-                 'sensor_type': 'binary_sensor',
-                 'function': get_rpi_power_status},
-          'last_boot':
-                {'name': 'Last Boot',
-                 'class': 'timestamp',
-                 'icon': 'clock',
-                 'sensor_type': 'sensor',
-                 'function': get_last_boot},
-          'hostname':
-                {'name': 'Hostname',
-                 'icon': 'card-account-details',
-                 'sensor_type': 'sensor',
-                 'function': get_hostname},
-          'host_ip':
-                {'name': 'Host IP',
-                 'icon': 'lan',
-                 'sensor_type': 'sensor',
-                 'function': get_host_ip},
-          'host_os':
-                {'name': 'Host OS',
-                 'icon': 'linux',
-                 'sensor_type': 'sensor',
-                 'function': get_host_os},
-          'host_arch':
-                {'name': 'Host Architecture',
-                 'icon': 'chip',
-                 'sensor_type': 'sensor',
-                 'function': get_host_arch},
-          'last_message':
-                {'name': 'Last Message',
-                 'class': 'timestamp',
-                 'icon': 'clock-check',
-                 'sensor_type': 'sensor',
-                 'function': get_last_message},
-          'updates':
-                {'name':'Updates',
-                 'icon': 'cellphone-arrow-down',
-                 'sensor_type': 'sensor',
-                 'function': get_updates},
-          'wifi_strength':
-                {'class': 'signal_strength',
-                 'state_class':'measurement',
-                 'name':'Wifi Strength',
-                 'unit': 'dBm',
-                 'icon': 'wifi',
-                 'sensor_type': 'sensor',
-                 'function': get_wifi_strength},
-          'wifi_ssid':
-                {'name':'Wifi SSID',
-                 'icon': 'wifi',
-                 'sensor_type': 'sensor',
-                 'function': get_wifi_ssid},
-          }
+    'temperature':
+        {'name':'Temperature',
+            'class': 'temperature',
+            'state_class':'measurement',
+            'unit': '°C',
+            'icon': 'thermometer',
+            'sensor_type': 'sensor',
+            'function': get_temp},
+    'fan_speed':
+        {'name': 'Fan Speed',
+            'state_class': 'measurement',
+            'unit': 'rpm',
+            'icon': 'fan',
+            'sensor_type': 'sensor',
+            'function': get_fan_speed},
+    'display':
+        {'name':'Display Switch',
+            'icon': 'monitor',
+            'sensor_type': 'switch',
+            'function': get_display_status,
+            'prop': PropertyBag({
+                'command_topic'      : 'system-sensors/sensor/{device_name}/command',
+                'state_off'          : '0',
+                'state_on'           : '1',
+                'payload_off'        : 'display_off',
+                'payload_on'         : 'display_on',
+            })},
+    'slideshow':
+        {'name':'Slide Show Switch',
+            'icon': 'monitor',
+            'sensor_type': 'switch',
+            'function': get_slideshow_status,
+            'prop': PropertyBag({
+                'command_topic'      : 'system-sensors/sensor/{device_name}/command',
+                'state_off'          : '0',
+                'state_on'           : '1',
+                'payload_off'        : 'slideshow_off',
+                'payload_on'         : 'slideshow_on',
+            })},
+    'clock_speed':
+        {'name':'Clock Speed',
+            'state_class':'measurement',
+            'unit': 'MHz',
+            'sensor_type': 'sensor',
+            'function': get_clock_speed},
+    'disk_use':
+        {'name':'Disk Use',
+            'state_class':'measurement',
+            'unit': '%',
+            'icon': 'micro-sd',
+            'sensor_type': 'sensor',
+            'function': lambda: get_disk_usage('/')},
+    'memory_use':
+        {'name':'Memory Use',
+            'state_class':'measurement',
+            'unit': '%',
+            'icon': 'memory',
+            'sensor_type': 'sensor',
+            'function': get_memory_usage},
+    'cpu_usage':
+        {'name':'CPU Usage',
+            'state_class':'measurement',
+            'unit': '%',
+            'icon': 'chip',
+            'sensor_type': 'sensor',
+            'function': get_cpu_usage},
+    'load_1m':
+        {'name': 'Load 1m',
+            'unit': '%',
+            'state_class':'measurement',
+            'icon': 'cpu-64-bit',
+            'sensor_type': 'sensor',
+            'function': lambda: get_load(0)},
+    'load_5m':
+        {'name': 'Load 5m',
+            'unit': '%',
+            'state_class':'measurement',
+            'icon': 'cpu-64-bit',
+            'sensor_type': 'sensor',
+            'function': lambda: get_load(1)},
+    'load_15m':
+        {'name': 'Load 15m',
+            'unit': '%',
+            'state_class':'measurement',
+            'icon': 'cpu-64-bit',
+            'sensor_type': 'sensor',
+            'function': lambda: get_load(2)},
+    'net_tx':
+        {'name': 'Network Upload',
+            'state_class':'measurement',
+            'unit': 'Kbps',
+            'icon': 'server-network',
+            'sensor_type': 'sensor',
+            'function': get_net_data_tx},
+    'net_rx':
+        {'name': 'Network Download',
+            'state_class':'measurement',
+            'unit': 'Kbps',
+            'icon': 'server-network',
+            'sensor_type': 'sensor',
+            'function': get_net_data_rx},
+    'swap_usage':
+        {'name':'Swap Usage',
+            'state_class':'measurement',
+            'unit': '%',
+            'icon': 'harddisk',
+            'sensor_type': 'sensor',
+            'function': get_swap_usage},
+    'power_status':
+        {'name': 'Under Voltage',
+            'class': 'problem',
+            'sensor_type': 'binary_sensor',
+            'function': get_rpi_power_status},
+    'last_boot':
+        {'name': 'Last Boot',
+            'class': 'timestamp',
+            'icon': 'clock',
+            'sensor_type': 'sensor',
+            'function': get_last_boot},
+    'hostname':
+        {'name': 'Hostname',
+            'icon': 'card-account-details',
+            'sensor_type': 'sensor',
+            'function': get_hostname},
+    'host_ip':
+        {'name': 'Host IP',
+            'icon': 'lan',
+            'sensor_type': 'sensor',
+            'function': get_host_ip},
+    'host_os':
+        {'name': 'Host OS',
+            'icon': 'linux',
+            'sensor_type': 'sensor',
+            'function': get_host_os},
+    'host_arch':
+        {'name': 'Host Architecture',
+            'icon': 'chip',
+            'sensor_type': 'sensor',
+            'function': get_host_arch},
+    'last_message':
+        {'name': 'Last Message',
+            'class': 'timestamp',
+            'icon': 'clock-check',
+            'sensor_type': 'sensor',
+            'function': get_last_message},
+    'updates':
+        {'name':'Updates',
+            'icon': 'cellphone-arrow-down',
+            'sensor_type': 'sensor',
+            'function': get_updates},
+    'wifi_strength':
+        {'class': 'signal_strength',
+            'state_class':'measurement',
+            'name':'Wifi Strength',
+            'unit': 'dBm',
+            'icon': 'wifi',
+            'sensor_type': 'sensor',
+            'function': get_wifi_strength},
+    'wifi_ssid':
+        {'name':'Wifi SSID',
+            'icon': 'wifi',
+            'sensor_type': 'sensor',
+            'function': get_wifi_ssid},
+    }
 
