@@ -166,7 +166,8 @@ def get_display_status():
     except Exception as e:
         write_message_to_console(e)
 
-    return port.status
+    return str(port.status)
+
     if "rasp" in OS_DATA["ID"]:
         reading = subprocess.check_output([vcgencmd, "display_power"]).decode("UTF-8")
         display_state = str(re.findall("^display_power=(?P<display_state>[01]{1})$", reading)[0])
@@ -178,12 +179,12 @@ def get_slideshow_status():
     try:
         processes   = subprocess.check_output(['ps', '-ef']).decode("UTF-8").split('\n')
     except Exception as e:
-        return False
+        return str(False)
     
     for process in processes:
         if 'PictureFrame' in process:
-            return True
-    return False
+            return str(True)
+    return str(False)
 
 # Replaced with psutil method - does this not work fine?
 def get_clock_speed():
