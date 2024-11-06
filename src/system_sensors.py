@@ -217,13 +217,13 @@ def on_message(client, userdata, message):
         send_config_message(client)
     elif message.payload.decode() == "display_on":
         write_message_to_console("Switch port 1-1.2 on")
-        port.status = True
+        Port.status = True
         write_message_to_console("Screen is turned on.")
         reading = subprocess.check_output([vcgencmd, "display_power", "1"]).decode("UTF-8")
         update_sensors()
     elif message.payload.decode() == "display_off":
         write_message_to_console("Switch port 1-1.2 off")
-        port.status = False
+        Port.status = False
         write_message_to_console("Screen is turned off.")
         reading = subprocess.check_output([vcgencmd, "display_power", "0"]).decode("UTF-8")
         update_sensors()
