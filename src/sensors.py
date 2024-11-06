@@ -402,7 +402,7 @@ sensors = {
             })},
     'slideshow2':
         {
-            'name':'Slide Show Switch Two',
+            'name':'Slide Show Switch',
             'icon': 'monitor',
             'sensor_type': 'switch',
             'function': get_slideshow_status,

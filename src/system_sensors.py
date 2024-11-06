@@ -50,7 +50,11 @@ class Job(threading.Thread):
 
 def update_sensors():
     payload_str = f'{{'
+
+    write_message_to_console('Updating sensore')
     for sensor, attr in sensors.items():
+        write_message_to_console(sensor)
+        write_message_to_console(attr)
         # Skip sensors that have been disabled or are missing
         if sensor in external_drives:
             payload_str += f'"{sensor}": "{attr["function"]()}",'
