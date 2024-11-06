@@ -158,6 +158,14 @@ def get_fan_speed():
 
 # display power method depending on system distro
 def get_display_status():
+    try:
+        if port.status:
+            write_message_to_console("Screen is turned on.")
+        else:
+            write_message_to_console("Screen is turned off.")
+    except Exception as e:
+        write_message_to_console(e)
+
     return port.status
     if "rasp" in OS_DATA["ID"]:
         reading = subprocess.check_output([vcgencmd, "display_power"]).decode("UTF-8")
