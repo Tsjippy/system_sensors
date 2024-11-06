@@ -162,8 +162,10 @@ def get_display_status():
     try:
         if port.status:
             write_message_to_console("Screen is turned on.")
+            return '1'
         else:
             write_message_to_console("Screen is turned off.")
+            return '0'
     except Exception as e:
         write_message_to_console(e)
 
