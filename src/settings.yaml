@@ -16,7 +16,6 @@ sensors:
   temperature: true
   display: true
   slideshow: true
-  slideshow2: true
   clock_speed: true
   fan_speed: false
   disk_use: true

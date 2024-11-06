@@ -91,7 +91,7 @@ def write_message_to_console(msg):
     else:
         log_msg     = f'{date} - {location}' + ' - ' + msg
 
-    f   = open('/home/pi/rpi3_debug.log', "a", encoding="utf-8")
+    f   = open('/home/pi/rpi3_debug.log', "r", encoding="utf-8")
     f.write(log_msg + "\n")
     f.close()
 
@@ -194,10 +194,12 @@ def get_slideshow_status():
     try:
         processes   = subprocess.check_output(['ps', '-ef']).decode("UTF-8").split('\n')
     except Exception as e:
+        write_message_to_console(e)
         return str(False)
     
     for process in processes:
         if 'PictureFrame' in process:
+            write_message_to_console(process)
             return str(True)
     return str(False)
 
@@ -417,14 +419,14 @@ sensors = {
                 'payload_off'        : 'display_off',
                 'payload_on'         : 'display_on',
             })},
-    'slideshow2':
+    'slideshow':
         {
             'name':'Slide Show Switch',
             'icon': 'monitor',
             'sensor_type': 'switch',
             'function': get_slideshow_status,
             'prop': PropertyBag({
-                'command_topic'      : 'system-sensors/sensor/{device_name}/command',
+                'command_topic'      : 'system-sensors/sensor/{device_name}/command_slide',
                 'state_off'          : '0',
                 'state_on'           : '1',
                 'payload_off'        : 'slideshow_off',
