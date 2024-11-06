@@ -158,6 +158,7 @@ def get_fan_speed():
 
 # display power method depending on system distro
 def get_display_status():
+    write_message_to_console("Getting display status")
     try:
         if port.status:
             write_message_to_console("Screen is turned on.")
@@ -168,14 +169,9 @@ def get_display_status():
 
     return str(port.status)
 
-    if "rasp" in OS_DATA["ID"]:
-        reading = subprocess.check_output([vcgencmd, "display_power"]).decode("UTF-8")
-        display_state = str(re.findall("^display_power=(?P<display_state>[01]{1})$", reading)[0])
-    else:
-        display_state = "Unknown"
-    return display_state
-
 def get_slideshow_status():
+    
+    write_message_to_console("Getting slideshow status")
     try:
         processes   = subprocess.check_output(['ps', '-ef']).decode("UTF-8").split('\n')
     except Exception as e:
@@ -402,8 +398,9 @@ sensors = {
                 'payload_off'        : 'display_off',
                 'payload_on'         : 'display_on',
             })},
-    'slideshow':
-        {'name':'Slide Show Switch',
+    'slideshow2':
+        {
+            'name':'Slide Show Switch Two',
             'icon': 'monitor',
             'sensor_type': 'switch',
             'function': get_slideshow_status,
