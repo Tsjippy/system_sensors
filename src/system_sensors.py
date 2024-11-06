@@ -227,6 +227,14 @@ def on_message(client, userdata, message):
         write_message_to_console("Screen is turned off.")
         reading = subprocess.check_output([vcgencmd, "display_power", "0"]).decode("UTF-8")
         update_sensors()
+    elif message.payload.decode() == "slideshow_on":
+        result  = os.system('DISPLAY=:0.0 python3 /home/pi/pi3d_demos/PictureFrame2020.py -m False --show_text "date location" &')
+        write_message_to_console("Slideshow is turned on.")
+        update_sensors()
+    elif message.payload.decode() == "slideshow_off":
+        os.popen("kill $(ps -efw | grep PictureFrame2020 | grep -v grep | awk '{print $2}')")
+        write_message_to_console("Slideshow is turned off.")
+        update_sensors()
 
 if __name__ == '__main__':
     try:

@@ -162,6 +162,10 @@ def get_display_status():
     return display_state
 
 def get_slideshow_status():
+    processes   = subprocess.check_output(['ps', '-ef']).decode("UTF-8").split('\n')
+    for process in processes:
+        if 'PictureFrame' in process:
+            return True
     return False
 
 # Replaced with psutil method - does this not work fine?
