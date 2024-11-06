@@ -228,7 +228,6 @@ def on_message(client, userdata, message):
         reading = subprocess.check_output([vcgencmd, "display_power", "0"]).decode("UTF-8")
         update_sensors()
 
-
 if __name__ == '__main__':
     try:
         args = _parser().parse_args()
@@ -260,7 +259,6 @@ if __name__ == '__main__':
     deviceManufacturer = "RPI Foundation" if "rasp" in OS_DATA["ID"] else OS_DATA['NAME']
     deviceModel = get_host_model()
     ha_status = settings['ha_status']
-    
 
     # https://eclipse.dev/paho/files/paho.mqtt.python/html/migrations.html
     # note that with version1, mqttv3 is used and no other migration is made
