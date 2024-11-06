@@ -81,6 +81,7 @@ def set_default_timezone(timezone):
     DEFAULT_TIME_ZONE = timezone
 
 def write_message_to_console(msg):
+    msg         = str(msg)
     date        = datetime.strftime(datetime.now(), '%d-%m-%Y %H:%M')
     caller      = getframeinfo(stack()[1][0])
     location    = f'{os.path.basename(caller.filename)}:{caller.lineno} -'.ljust(25)
