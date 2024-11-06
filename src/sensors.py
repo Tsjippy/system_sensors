@@ -90,7 +90,7 @@ def write_message_to_console(msg):
     else:
         log_msg     = f'{date} - {location}' + ' - ' + msg
 
-    f   = open('rpi3_debug.log', "a", encoding="utf-8")
+    f   = open('/home/pi/rpi3_debug.log', "a", encoding="utf-8")
     f.write(log_msg + "\n")
     f.close()
 
