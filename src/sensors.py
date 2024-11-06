@@ -91,7 +91,7 @@ def write_message_to_console(msg):
     else:
         log_msg     = f'{date} - {location}' + ' - ' + msg
 
-    f   = open('/home/pi/rpi3_debug.log', "r", encoding="utf-8")
+    f   = open('/home/pi/rpi3_debug.log', "a", encoding="utf-8")
     f.write(log_msg + "\n")
     f.close()
 
@@ -175,33 +175,26 @@ def get_fan_speed():
 
 # display power method depending on system distro
 def get_display_status():
-    write_message_to_console("Getting display status")
     try:
         if port.status:
-            write_message_to_console("Screen is turned on.")
             return '1'
         else:
-            write_message_to_console("Screen is turned off.")
             return '0'
     except Exception as e:
-        write_message_to_console(e)
-
-    return str(port.status)
+        write_message_to_console(f"error: {e}")
+    return '0'
 
 def get_slideshow_status():
-    
-    write_message_to_console("Getting slideshow status")
     try:
         processes   = subprocess.check_output(['ps', '-ef']).decode("UTF-8").split('\n')
     except Exception as e:
-        write_message_to_console(e)
-        return str(False)
+        write_message_to_console(f"error: {e}")
+        return '0'
     
     for process in processes:
         if 'PictureFrame' in process:
-            write_message_to_console(process)
-            return str(True)
-    return str(False)
+            return '1'
+    return '0'
 
 # Replaced with psutil method - does this not work fine?
 def get_clock_speed():
@@ -426,7 +419,7 @@ sensors = {
             'sensor_type': 'switch',
             'function': get_slideshow_status,
             'prop': PropertyBag({
-                'command_topic'      : 'system-sensors/sensor/{device_name}/command_slide',
+                'command_topic'      : 'system-sensors/sensor/{device_name}/command',
                 'state_off'          : '0',
                 'state_on'           : '1',
                 'payload_off'        : 'slideshow_off',

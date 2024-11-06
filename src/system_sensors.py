@@ -51,10 +51,8 @@ class Job(threading.Thread):
 def update_sensors():
     payload_str = f'{{'
 
-    write_message_to_console('Updating sensore')
+    write_message_to_console('Updating sensors')
     for sensor, attr in sensors.items():
-        write_message_to_console(sensor)
-        write_message_to_console(str(attr))
         # Skip sensors that have been disabled or are missing
         if sensor in external_drives:
             payload_str += f'"{sensor}": "{attr["function"]()}",'
@@ -66,13 +64,13 @@ def update_sensors():
 
     payload_str = payload_str[:-1]
     payload_str += f'}}'
+
     mqttClient.publish(
         topic=f'system-sensors/{attr["sensor_type"]}/{devicename}/state',
         payload=payload_str,
         qos=1,
         retain=False,
     )
-
 
 def send_config_message(mqttClient):
 
@@ -218,7 +216,7 @@ def on_connect(client, userdata, flags, reason_code='', properties=''):
         write_message_to_console('Connection failed')
 
 def on_message(client, userdata, message):
-    print (f'Message received: {message.payload.decode()}'  )
+    write_message_to_console (f'Message received: {message.payload.decode()}'  )
     if message.payload.decode() == 'online':
         send_config_message(client)
     elif message.payload.decode() == "display_on":
@@ -238,9 +236,12 @@ def on_message(client, userdata, message):
         write_message_to_console("Slideshow is turned on.")
         update_sensors()
     elif message.payload.decode() == "slideshow_off":
-        os.popen("kill $(ps -efw | grep PictureFrame2020 | grep -v grep | awk '{print $2}')")
-        write_message_to_console("Slideshow is turned off.")
-        update_sensors()
+        try:
+            os.popen("kill $(ps -efw | grep PictureFrame2020 | grep -v grep | awk '{print $2}')")
+            write_message_to_console("Slideshow is turned off.")
+            update_sensors()
+        except Exception as e:
+            write_message_to_console(f"Error: {e}")
 
 if __name__ == '__main__':
     try:
