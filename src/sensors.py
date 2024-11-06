@@ -12,6 +12,9 @@ import sys
 import os
 import shutil
 import json
+from inspect import getframeinfo, stack
+from datetime import datetime
+
 # import os.path
 from uhubctl import Hub, Port
 
@@ -77,8 +80,21 @@ def set_default_timezone(timezone):
     global DEFAULT_TIME_ZONE
     DEFAULT_TIME_ZONE = timezone
 
-def write_message_to_console(message):
-    print(message)
+def write_message_to_console(msg):
+    date        = datetime.strftime(datetime.now(), '%d-%m-%Y %H:%M')
+    caller      = getframeinfo(stack()[1][0])
+    location    = f'{os.path.basename(caller.filename)}:{caller.lineno} -'.ljust(25)
+
+    if msg == '':
+        log_msg = "\n\n"
+    else:
+        log_msg     = f'{date} - {location}' + type.ljust(7) + ' - ' + msg
+
+    f   = open('rpi3_debug.log', "a", encoding="utf-8")
+    f.write(log_msg + "\n")
+    f.close()
+
+    print(msg)
     sys.stdout.flush()
 
 def as_local(dattim: dt.datetime) -> dt.datetime:
