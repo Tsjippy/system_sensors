@@ -105,7 +105,6 @@ def as_local(dattim: dt.datetime) -> dt.datetime:
         return dattim
     if dattim.tzinfo is None:
         dattim = UTC.localize(dattim)
-
     return dattim.astimezone(DEFAULT_TIME_ZONE)
 
 def utc_from_timestamp(timestamp: float) -> dt.datetime:

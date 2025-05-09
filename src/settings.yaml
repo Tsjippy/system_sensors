@@ -16,7 +16,7 @@ sensors:
   temperature: true
   display: true
   slideshow: true
-  clock_speed: true
+  clock_speed: false
   fan_speed: false
   disk_use: true
   memory_use: true
@@ -27,16 +27,16 @@ sensors:
   net_tx: false # true for all interfaces, otherwise the name of the interface
   net_rx: false # true for all interfaces, otherwise the name of the interface
   swap_usage: true
-  power_status: true
+  power_status: false
   last_boot: true
-  hostname: true
-  host_ip: true
-  host_os: true
-  host_arch: true
+  hostname: false
+  host_ip: false
+  host_os: false
+  host_arch: false
   last_message: true
-  updates: true
-  wifi_strength: true
-  wifi_ssid: true
+  updates: false
+  wifi_strength: false
+  wifi_ssid: false
   external_drives:
     # Only add mounted drives here, e.g.:
     # Drive1: /media/storage
